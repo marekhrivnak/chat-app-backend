@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -34,5 +35,26 @@ public class UserController {
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         Optional<User> user = userService.getUserByUsername(username);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{username}/profile-image")
+    public ResponseEntity<?> updateProfileImage(
+        @PathVariable String username,
+        @RequestBody Map<String, String> body
+    ) {
+        String image = body.get("profileImage");
+        Optional<User> userOpt = userService.getUserByUsername(username);
+        if (userOpt.isEmpty()) return ResponseEntity.notFound().build();
+        User user = userOpt.get();
+        user.setProfileImage(image);
+        userService.saveUser(user);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{username}/profile-image")
+    public ResponseEntity<?> getProfileImage(@PathVariable String username) {
+        Optional<User> userOpt = userService.getUserByUsername(username);
+        if (userOpt.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(Map.of("profileImage", userOpt.get().getProfileImage()));
     }
 } 

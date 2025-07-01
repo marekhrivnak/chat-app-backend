@@ -43,5 +43,7 @@ public class User {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
-    
+
+    @Column(columnDefinition = "TEXT")
+    private String profileImage;
 }

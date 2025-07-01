@@ -26,4 +26,7 @@ public class ChatMessage {
 
     @Column(nullable = false)
     private LocalDateTime timestamp;
+
+    @Column(nullable = false)
+    private Long roomId;
 } 
